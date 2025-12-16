@@ -1,5 +1,7 @@
 package telegrambotapi
 
+import "errors"
+
 type User struct {
 	ID        int64   `json:"id"`
 	IsBot     bool    `json:"is_bot"`
@@ -33,3 +35,5 @@ type Message struct {
 	Chat Chat    `json:"chat"`
 	Text *string `json:"text"`
 }
+
+var ErrUnexpectedStatusCode = errors.New("unexpected status code")

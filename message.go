@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"net/http"
 )
 
 type SendMessageRequest struct {
@@ -16,9 +17,10 @@ func (c *client) SendMessage(ctx context.Context, req SendMessageRequest) (*Mess
 	if err != nil {
 		return nil, err
 	}
-	msg, err := makeRequest[Message](ctx, c.token, "/sendMessage", bytes.NewReader(body), makeRequestOptions{
+	msg, err := makeRequest[Message](ctx, http.MethodPost, "/sendMessage", bytes.NewReader(body), makeRequestOptions{
 		baseURL:    c.baseURL,
 		httpClient: c.httpClient,
+		token:      c.token,
 	})
 	if err != nil {
 		return nil, err
