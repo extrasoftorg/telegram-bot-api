@@ -14,6 +14,12 @@ type makeRequestOptions struct {
 	token      string
 }
 
+type apiResponse[T any] struct {
+	OK          bool   `json:"ok"`
+	Description string `json:"description"`
+	Result      *T     `json:"result"`
+}
+
 func makeRequest[T any](
 	ctx context.Context,
 	method string,
@@ -35,19 +41,19 @@ func makeRequest[T any](
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("%w: %d", ErrUnexpectedStatusCode, resp.StatusCode)
-	}
-
 	bodyBytes, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}
 
-	var result T
+	var result apiResponse[T]
 	if err = json.Unmarshal(bodyBytes, &result); err != nil {
 		return nil, err
 	}
 
-	return &result, nil
+	if !result.OK {
+		return nil, fmt.Errorf("telegram api error: %s", result.Description)
+	}
+
+	return result.Result, nil
 }

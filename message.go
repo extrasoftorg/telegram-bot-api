@@ -8,10 +8,9 @@ import (
 )
 
 type SendMessageRequest struct {
-	ChatID      int64                 `json:"chat_id"`
-	Text        string                `json:"text"`
-	ParseMode   string                `json:"parse_mode,omitempty"`
-	ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
+	ChatID    int64  `json:"chat_id"`
+	Text      string `json:"text"`
+	ParseMode string `json:"parse_mode,omitempty"`
 }
 
 func (c *client) SendMessage(ctx context.Context, req SendMessageRequest) (*Message, error) {
@@ -28,17 +27,4 @@ func (c *client) SendMessage(ctx context.Context, req SendMessageRequest) (*Mess
 		return nil, err
 	}
 	return msg, nil
-}
-
-func (c *client) AnswerCallbackQuery(ctx context.Context, req AnswerCallbackQueryRequest) error {
-	body, err := json.Marshal(req)
-	if err != nil {
-		return err
-	}
-	_, err = makeRequest[bool](ctx, http.MethodPost, "/answerCallbackQuery", bytes.NewReader(body), makeRequestOptions{
-		baseURL:    c.baseURL,
-		httpClient: c.httpClient,
-		token:      c.token,
-	})
-	return err
 }
