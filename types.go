@@ -37,3 +37,17 @@ type Message struct {
 }
 
 var ErrUnexpectedStatusCode = errors.New("unexpected status code")
+
+type InlineKeyboardButton struct {
+	Text         string  `json:"text"`
+	CallbackData *string `json:"callback_data,omitempty"`
+}
+
+type InlineKeyboardMarkup struct {
+	InlineKeyboard [][]InlineKeyboardButton `json:"inline_keyboard"`
+}
+
+type AnswerCallbackQueryRequest struct {
+	CallbackQueryID string  `json:"callback_query_id"`
+	Text            *string `json:"text,omitempty"`
+}
